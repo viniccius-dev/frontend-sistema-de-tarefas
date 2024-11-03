@@ -4,6 +4,7 @@ import { Header } from "../../components/Header";
 import { ButtonText } from "../../components/ButtonText";
 import { Input } from "../../components/Input";
 import { Section } from "../../components/Section";
+import { Note } from "../../components/Task";
 
 import systemTitle from '../../assets/titulo_sistema.png';
 import { FiSearch } from "react-icons/fi";
@@ -36,7 +37,7 @@ export function Home() {
 
             <Content>
                 <Section title="Minhas Tarefas">
-
+                    <Note />
                 </Section>
             </Content>
 
