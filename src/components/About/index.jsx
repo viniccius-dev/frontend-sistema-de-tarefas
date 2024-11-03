@@ -1,15 +1,18 @@
 import { Background, Container } from "./styles";
 import { Section } from "../Section";
-
 import { FiX } from "react-icons/fi";
 
-import closeModal from "../../utils/toggleModal";
+export function About({ closeModal }) {
+    const handleBackgroundClick = (event) => {
+        if (event.target === event.currentTarget) {
+            closeModal();
+        }
+    };
 
-export function About() {
     return (
-        <Background id="aboutModal" className="hidden">
-            <Container id="aboutSection">
-                <FiX onClick={closeModal} className="closeButton"/>
+        <Background onClick={handleBackgroundClick}>
+            <Container>
+                <FiX onClick={closeModal} />
 
                 <Section title="Sobre o sistema">
                     <p>

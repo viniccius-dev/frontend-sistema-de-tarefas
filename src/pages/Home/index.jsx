@@ -1,15 +1,23 @@
-import { Container, Brand, Menu, Search, Content } from "./styles";
+import { useState } from "react";
+import { Container, Brand, Menu, Search, Content, AddTask } from "./styles";
 
 import { Header } from "../../components/Header";
 import { ButtonText } from "../../components/ButtonText";
 import { Input } from "../../components/Input";
 import { Section } from "../../components/Section";
 import { Note } from "../../components/Task";
+import { FormTask } from '../../components/FormTask';
 
 import systemTitle from '../../assets/titulo_sistema.png';
 import { FiSearch } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 
 export function Home() {
+    const [showModal, setShowModal] = useState(false);
+
+    const openModal = () => setShowModal(true);
+    const closeModal = () => setShowModal(false);
+
     return (
         <Container>
 
@@ -40,6 +48,12 @@ export function Home() {
                     <Note />
                 </Section>
             </Content>
+
+            <AddTask>
+                <FiPlus onClick={openModal} />
+            </AddTask>
+
+            {showModal && <FormTask closeModal={closeModal} />}
 
         </Container>
     );

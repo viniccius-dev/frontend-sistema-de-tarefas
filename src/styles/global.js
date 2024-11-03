@@ -20,7 +20,7 @@ export default createGlobalStyle`
         outline: none;
     }
 
-    body .hidden {
+    body .hiddenForm, body .hiddenAbout {
         display: none;
     }
 

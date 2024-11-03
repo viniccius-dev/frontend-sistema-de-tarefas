@@ -55,3 +55,29 @@ export const Content = styled.div`
     padding: 0 50px;
     overflow-y: auto;
 `;
+
+export const AddTask = styled.div`
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.5s;
+
+    bottom: 20px;
+    right: 50px;
+
+    width: 50px;
+    height: 50px;
+    
+    border-radius: 25px;
+    background-color: ${({ theme }) => theme.COLORS.RED};
+
+    svg {
+        font-size: 25px;
+    }
+
+    &:hover {
+        background-color: ${({ theme }) => theme.COLORS.RED_200};
+    }
+`;
