@@ -1,5 +1,18 @@
+import { Container, Brand, Menu, Search, Content } from "./styles";
+import { Header } from "../../components/Header";
+
+import systemTitle from '../../assets/titulo_sistema.png';
+
 export function Home() {
     return (
-        <h1>Olá</h1>
+        <Container>
+
+            <Brand>
+                <img src={systemTitle} alt="Sistema de Tarefas" />
+            </Brand>
+
+            <Header />
+
+        </Container>
     );
 }
