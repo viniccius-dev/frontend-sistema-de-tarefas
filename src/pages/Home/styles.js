@@ -36,8 +36,9 @@ export const Menu = styled.ul`
 
     background-color: ${({ theme }) => theme.COLORS.BACKGROUND_900};
 
-    padding-top: 50px;
+    padding-top: 35px;
     text-align: center;
+    overflow-y: auto;
 
     > li {
         margin-bottom: 24px;
@@ -46,7 +47,7 @@ export const Menu = styled.ul`
 
 export const Search = styled.div`
     grid-area: search;
-    padding: 50px 50px 0;
+    padding: 32px 50px 0;
 `;
 
 export const Content = styled.div`

@@ -23,6 +23,10 @@ export default createGlobalStyle`
     a {
         text-decoration: none;
     }
+
+    img {
+        user-select: none;
+    }
     
     button, a {
         cursor: pointer;
@@ -31,5 +35,23 @@ export default createGlobalStyle`
 
     button:hover , a:hover {
         filter: brightness(0.9);
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+        border-radius: 3px;
+        border: 2px solid transparent;
+    }
+
+    ::-webkit-scrollbar-button {
+        display: none;
     }
 `;
