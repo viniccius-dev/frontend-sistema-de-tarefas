@@ -3,6 +3,7 @@ import { Container, Brand, Menu, Search, Content } from "./styles";
 import { Header } from "../../components/Header";
 import { ButtonText } from "../../components/ButtonText";
 import { Input } from "../../components/Input";
+import { Section } from "../../components/Section";
 
 import systemTitle from '../../assets/titulo_sistema.png';
 import { FiSearch } from "react-icons/fi";
@@ -32,6 +33,12 @@ export function Home() {
                     icon={FiSearch}
                 />
             </Search>
+
+            <Content>
+                <Section title="Minhas Tarefas">
+
+                </Section>
+            </Content>
 
         </Container>
     );
