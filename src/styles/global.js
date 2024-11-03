@@ -20,6 +20,10 @@ export default createGlobalStyle`
         outline: none;
     }
 
+    body .hidden {
+        display: none;
+    }
+
     a {
         text-decoration: none;
     }

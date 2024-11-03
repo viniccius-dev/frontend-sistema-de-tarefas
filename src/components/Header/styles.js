@@ -19,7 +19,7 @@ export const Container = styled.header`
     }
 `;
 
-export const About = styled.button`
+export const AboutIcon = styled.button`
     border: none;
     background: none;
     cursor: default;

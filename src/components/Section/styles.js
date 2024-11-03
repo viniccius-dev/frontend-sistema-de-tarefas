@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.section`
     margin-bottom: 10px;
+    width: 100%;
 
     > h2 {
         border-bottom: ${({ theme }) => `1px solid ${theme.COLORS.BACKGROUND_700}`};
