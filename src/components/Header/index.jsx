@@ -4,8 +4,9 @@ import { About } from '../About';
 
 import logoFatto from '../../assets/logo_fatto.png';
 import { RiInformationLine } from 'react-icons/ri';
+import { FaList } from "react-icons/fa";
 
-export function Header() {
+export function Header({ onOpenMenu }) {
     const [showAbout, setShowAbout] = useState(false);
 
     const openAbout = () => setShowAbout(true);
@@ -13,6 +14,8 @@ export function Header() {
 
     return (
         <Container>
+            <FaList onClick={onOpenMenu} />
+
             <img src={logoFatto} alt="Logo Fatto" />
 
             <AboutIcon>

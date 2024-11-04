@@ -9,7 +9,7 @@ import { Task } from "../../components/Task";
 import { FormTask } from '../../components/FormTask';
 
 import systemTitle from '../../assets/titulo_sistema.png';
-import { FiSearch, FiPlus } from "react-icons/fi";
+import { FiSearch, FiPlus, FiX } from "react-icons/fi";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 import { api } from '../../services/api';
@@ -23,6 +23,8 @@ export function Home() {
     const [taskToEdit, setTaskToEdit] = useState(null);
     const [loadingDates, setLoadingDates] = useState(false);
     const [loadingTasks, setLoadingTasks] = useState(false);
+
+    const [menuIsOpen, setMenuIsOpen] = useState(false);
 
     const openModal = (task = null) => {
         setTaskToEdit(task);
@@ -108,13 +110,14 @@ export function Home() {
 
     return (
         <Container>
-            <Brand>
+            <Brand data-menu-is-open={menuIsOpen}>
                 <img src={systemTitle} alt="Sistema de Tarefas" />
+                <FiX onClick={() => setMenuIsOpen(false)} />
             </Brand>
 
-            <Header />
+            <Header onOpenMenu={() => setMenuIsOpen(true)} />
 
-            <Menu>
+            <Menu data-menu-is-open={menuIsOpen}>
                 {loadingDates ? (
                     <LoadingSpinner loading={loadingDates} />
                 ) : (

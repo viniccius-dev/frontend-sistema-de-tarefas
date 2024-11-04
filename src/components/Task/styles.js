@@ -18,6 +18,7 @@ export const Container = styled.button`
 
         .order-task-controls {
             display: flex;
+            justify-content: center;
             flex-direction: column;
             padding-right: 10px;
         }
@@ -38,6 +39,8 @@ export const Container = styled.button`
     footer {
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
         margin-top: 18px;
     }
 

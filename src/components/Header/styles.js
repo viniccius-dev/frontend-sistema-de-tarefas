@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { DEVICE_BREAKPOINTS } from "../../styles/deviceBreakpoints";
 
 export const Container = styled.header`
     grid-area: header;
@@ -14,8 +15,23 @@ export const Container = styled.header`
 
     padding: 0 50px;
 
+    > svg {
+        display: none;
+        color: ${({ theme }) => theme.COLORS.GRAY_100};
+        font-size: 25px;
+        cursor: pointer;
+
+        @media (max-width: ${DEVICE_BREAKPOINTS.MD}) {
+            display: block;
+        }
+    }
+
     > img {
         height: 60px;
+    }
+    
+    @media (max-width: ${DEVICE_BREAKPOINTS.MD}) {
+        padding: 0 20px;
     }
 `;
 
