@@ -18,7 +18,7 @@ export const Background = styled.div`
 
 export const Container = styled.div`
     width: 80%;
-    max-width: 400px;
+    max-width: 500px;
     border-radius: 25px;
     padding: 25px;
 

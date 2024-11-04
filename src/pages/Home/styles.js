@@ -27,7 +27,7 @@ export const Brand = styled.div`
     background-color: ${({ theme }) => theme.COLORS.BACKGROUND_900};
 
     > img {
-        height: 50px;
+        height: 40px;
     }
 `;
 
@@ -65,7 +65,7 @@ export const AddTask = styled.div`
     transition: 0.5s;
 
     bottom: 20px;
-    right: 50px;
+    right: 55px;
 
     width: 50px;
     height: 50px;

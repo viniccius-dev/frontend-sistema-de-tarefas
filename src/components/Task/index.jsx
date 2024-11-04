@@ -3,14 +3,23 @@ import { Container } from './styles';
 import { RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
 
 export function Note({ data, ...rest }) {
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2,
+        }).format(value);
+    }    
+
     return (
         <Container {...rest}>
             <div>
-                <h1>Desenvolvimento do Sistema de Tarefas - Fatto</h1>
+                <h1>{data.nome_da_tarefa}</h1>
 
                 <footer>
-                    <Tag title="Custo: R$1.000,00" />
-                    <Tag title="Data Limite: 13/11/2024" />
+                    <Tag title={`Custo: ${formatCurrency(data.custo)}`} />
+                    <Tag title={`Data Limite: ${data.data_limite}`} />
                 </footer>
             </div>
 

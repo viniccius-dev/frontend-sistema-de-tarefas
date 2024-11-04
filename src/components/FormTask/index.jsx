@@ -3,6 +3,7 @@ import { Background, Container } from "../About/styles";
 import { FiX } from "react-icons/fi";
 import { Section } from "../Section";
 import { Input } from "../Input";
+import { Button } from "../Button";
 
 export function FormTask({ closeModal }) {
 
@@ -28,6 +29,8 @@ export function FormTask({ closeModal }) {
                         <Input 
                             placeholder="Data Limite"
                         />
+
+                        <Button title="Salvar" />
                     </form>
                 </Section>
             </Container>

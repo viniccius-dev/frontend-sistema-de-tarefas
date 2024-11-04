@@ -39,5 +39,6 @@ export const Container = styled.button`
 
     svg:hover {
         background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+        color: ${({ theme }) => theme.COLORS.WHITE}
     }
 `;

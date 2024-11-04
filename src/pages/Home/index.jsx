@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Brand, Menu, Search, Content, AddTask } from "./styles";
 
 import { Header } from "../../components/Header";
@@ -12,11 +12,43 @@ import systemTitle from '../../assets/titulo_sistema.png';
 import { FiSearch } from "react-icons/fi";
 import { FiPlus } from "react-icons/fi";
 
+import { api } from '../../services/api';
+
 export function Home() {
+    const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
+    const [tasks, setTasks] = useState([]);
+    const [filterDate, setFilterDate] = useState([]);
+    const [tasksSelected, setTasksSelected] = useState([]);
 
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
+
+    function handleTaskSelected(date) {
+        if(date === "all") {
+            return setTasksSelected([]);
+        }
+
+        const alreadySelected = tasksSelected.includes(date);
+
+        if(alreadySelected) {
+            const filteredTasks = tasksSelected.filter(task => task !== date);
+            setTasksSelected(filteredTasks);
+        } else {
+            setTasksSelected(prevState => [...prevState, date]);
+        }
+    }
+
+    useEffect(() => {
+        async function fetchTasks() {
+            const tasks = await api.get(`/tasks?title=${search}&date=${tasksSelected}`);
+            const filterDate = await api.get(`/tasks/date`);
+            setTasks(tasks.data);
+            setFilterDate(filterDate.data);
+        }
+
+        fetchTasks();
+    }, [tasksSelected, search]);
 
     return (
         <Container>
@@ -29,28 +61,48 @@ export function Home() {
 
             <Menu>
                 <li>
-                    <ButtonText title="Todos" isActive={true} />
+                    <ButtonText 
+                        title="Todas Datas"
+                        isActive={tasksSelected.length === 0} 
+                        onClick={() => handleTaskSelected("all")}
+                    />
                 </li>
-                <li>
-                    <ButtonText title="10/11/2024"/>
-                </li>
+                {
+                    filterDate && filterDate.map((task, index) => (
+                        <li key={String(index)}>
+                            <ButtonText 
+                                title={task.data_limite}
+                                onClick={() => handleTaskSelected(task.data_limite)}
+                                isActive={tasksSelected.includes(task.data_limite)}
+                            />
+                        </li>
+                    ))
+                }
             </Menu>
 
             <Search>
                 <Input 
                     placeholder="Pesquisar pelo nome da tarefa"
+                    onChange={(e) => setSearch(e.target.value)}
                     icon={FiSearch}
                 />
             </Search>
 
             <Content>
                 <Section title="Minhas Tarefas">
-                    <Note />
+                    {
+                        tasks.map(task => (
+                            <Note 
+                                key={String(task.identificador_da_tarefa)}
+                                data={task}
+                            />
+                        ))
+                    }
                 </Section>
             </Content>
 
-            <AddTask>
-                <FiPlus onClick={openModal} />
+            <AddTask onClick={openModal} >
+                <FiPlus />
             </AddTask>
 
             {showModal && <FormTask closeModal={closeModal} />}
