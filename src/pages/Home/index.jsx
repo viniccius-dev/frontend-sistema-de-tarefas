@@ -9,8 +9,7 @@ import { Task } from "../../components/Task";
 import { FormTask } from '../../components/FormTask';
 
 import systemTitle from '../../assets/titulo_sistema.png';
-import { FiSearch } from "react-icons/fi";
-import { FiPlus } from "react-icons/fi";
+import { FiSearch, FiPlus } from "react-icons/fi";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 import { api } from '../../services/api';
@@ -22,7 +21,8 @@ export function Home() {
     const [tasksSelected, setTasksSelected] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
-    const [animationLoading, setAnimationLoading] = useState(false);
+    const [loadingDates, setLoadingDates] = useState(false);
+    const [loadingTasks, setLoadingTasks] = useState(false);
 
     const openModal = (task = null) => {
         setTaskToEdit(task);
@@ -40,7 +40,6 @@ export function Home() {
         }
 
         const alreadySelected = tasksSelected.includes(date);
-
         if(alreadySelected) {
             const filteredTasks = tasksSelected.filter(task => task !== date);
             setTasksSelected(filteredTasks);
@@ -62,78 +61,98 @@ export function Home() {
 
         const updatedTasks = Array.from(tasks);
         const [taskAbove, currentTask] = [updatedTasks[index - 1], updatedTasks[index]];
-        
+
         [updatedTasks[index - 1], updatedTasks[index]] = [currentTask, taskAbove];
         setTasks(updatedTasks);
         updateTaskOrder(currentTask.identificador_da_tarefa, taskAbove.identificador_da_tarefa);
     }
-    
+
     function moveTaskDown(index) {
         if (index === tasks.length - 1) return;
-    
+
         const updatedTasks = Array.from(tasks);
         const [currentTask, taskBelow] = [updatedTasks[index], updatedTasks[index + 1]];
-    
+
         [updatedTasks[index], updatedTasks[index + 1]] = [taskBelow, currentTask];
         setTasks(updatedTasks);
-    
         updateTaskOrder(currentTask.identificador_da_tarefa, taskBelow.identificador_da_tarefa);
     }
 
     useEffect(() => {
-        setAnimationLoading(true);
-        async function fetchTasks() {
-            const tasks = await api.get(`/tasks?title=${search}&date=${tasksSelected}`);
-            const filterDate = await api.get(`/tasks/date`);
-            setTasks(tasks.data);
-            setFilterDate(filterDate.data);
-            setAnimationLoading(false);
+        async function fetchDates() {
+            setLoadingDates(true);
+            try {
+                const response = await api.get(`/tasks/date`);
+                setFilterDate(response.data);
+            } finally {
+                setLoadingDates(false);
+            }
         }
-
+    
+        async function fetchTasks() {
+            setLoadingTasks(true);
+            try {
+                const response = await api.get(`/tasks?title=${search}&date=${tasksSelected}`);
+                setTasks(response.data);
+            } finally {
+                setLoadingTasks(false);
+            }
+        }
+    
+        if (filterDate.length === 0) {
+            fetchDates();
+        }
+    
         fetchTasks();
     }, [tasksSelected, search]);
 
     return (
-        animationLoading ? (
-            <LoadingSpinner loading={animationLoading} />
-        ) : (
-            <Container>
-                <Brand>
-                    <img src={systemTitle} alt="Sistema de Tarefas" />
-                </Brand>
+        <Container>
+            <Brand>
+                <img src={systemTitle} alt="Sistema de Tarefas" />
+            </Brand>
 
-                <Header />
+            <Header />
 
-                <Menu>
-                    <li>
-                        <ButtonText 
-                            title="Todas Datas"
-                            isActive={tasksSelected.length === 0} 
-                            onClick={() => handleTaskSelected("all")}
-                        />
-                    </li>
-                    {filterDate && filterDate.map((task, index) => (
-                        <li key={String(index)}>
+            <Menu>
+                {loadingDates ? (
+                    <LoadingSpinner loading={loadingDates} />
+                ) : (
+                    <>
+                        <li>
                             <ButtonText 
-                                title={task.data_limite}
-                                onClick={() => handleTaskSelected(task.data_limite)}
-                                isActive={tasksSelected.includes(task.data_limite)}
+                                title="Todas Datas"
+                                isActive={tasksSelected.length === 0} 
+                                onClick={() => handleTaskSelected("all")}
                             />
                         </li>
-                    ))}
-                </Menu>
+                        {filterDate && filterDate.map((task, index) => (
+                            <li key={String(index)}>
+                                <ButtonText 
+                                    title={task.data_limite}
+                                    onClick={() => handleTaskSelected(task.data_limite)}
+                                    isActive={tasksSelected.includes(task.data_limite)}
+                                />
+                            </li>
+                        ))}
+                    </>
+                )}
+            </Menu>
 
-                <Search>
-                    <Input 
-                        placeholder="Pesquisar pelo nome da tarefa"
-                        onChange={(e) => setSearch(e.target.value)}
-                        icon={FiSearch}
-                    />
-                </Search>
+            <Search>
+                <Input 
+                    placeholder="Pesquisar pelo nome da tarefa"
+                    onChange={(e) => setSearch(e.target.value)}
+                    icon={FiSearch}
+                />
+            </Search>
 
-                <Content>
-                    <Section title="Minhas Tarefas">
-                        {tasks.map((task, index) => (
+            <Content>
+                <Section title="Minhas Tarefas">
+                    {loadingTasks ? (
+                        <LoadingSpinner loading={loadingTasks} />
+                    ) : (
+                        tasks.map((task, index) => (
                             <Task 
                                 key={String(task.identificador_da_tarefa)}
                                 data={task}
@@ -141,21 +160,21 @@ export function Home() {
                                 onMoveUp={() => moveTaskUp(index)}
                                 onMoveDown={() => moveTaskDown(index)}
                             />
-                        ))}
-                    </Section>
-                </Content>
+                        ))
+                    )}
+                </Section>
+            </Content>
 
-                <AddTask onClick={() => openModal()} >
-                    <FiPlus />
-                </AddTask>
+            <AddTask onClick={() => openModal()} >
+                <FiPlus />
+            </AddTask>
 
-                {showModal && (
-                    <FormTask 
-                        closeModal={closeModal} 
-                        task={taskToEdit}
-                    />
-                )}
-            </Container>
-        )
+            {showModal && (
+                <FormTask 
+                    closeModal={closeModal} 
+                    task={taskToEdit}
+                />
+            )}
+        </Container>
     );
 }
