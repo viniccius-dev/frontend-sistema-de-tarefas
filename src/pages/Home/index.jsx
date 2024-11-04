@@ -11,6 +11,7 @@ import { FormTask } from '../../components/FormTask';
 import systemTitle from '../../assets/titulo_sistema.png';
 import { FiSearch } from "react-icons/fi";
 import { FiPlus } from "react-icons/fi";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 import { api } from '../../services/api';
 
@@ -21,9 +22,10 @@ export function Home() {
     const [tasksSelected, setTasksSelected] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
+    const [animationLoading, setAnimationLoading] = useState(false);
 
     const openModal = (task = null) => {
-        setTaskToEdit(task); // Define a tarefa selecionada para edição
+        setTaskToEdit(task);
         setShowModal(true);
     };
 
@@ -79,35 +81,38 @@ export function Home() {
     }
 
     useEffect(() => {
+        setAnimationLoading(true);
         async function fetchTasks() {
             const tasks = await api.get(`/tasks?title=${search}&date=${tasksSelected}`);
             const filterDate = await api.get(`/tasks/date`);
             setTasks(tasks.data);
             setFilterDate(filterDate.data);
+            setAnimationLoading(false);
         }
 
         fetchTasks();
     }, [tasksSelected, search]);
 
     return (
-        <Container>
+        animationLoading ? (
+            <LoadingSpinner loading={animationLoading} />
+        ) : (
+            <Container>
+                <Brand>
+                    <img src={systemTitle} alt="Sistema de Tarefas" />
+                </Brand>
 
-            <Brand>
-                <img src={systemTitle} alt="Sistema de Tarefas" />
-            </Brand>
+                <Header />
 
-            <Header />
-
-            <Menu>
-                <li>
-                    <ButtonText 
-                        title="Todas Datas"
-                        isActive={tasksSelected.length === 0} 
-                        onClick={() => handleTaskSelected("all")}
-                    />
-                </li>
-                {
-                    filterDate && filterDate.map((task, index) => (
+                <Menu>
+                    <li>
+                        <ButtonText 
+                            title="Todas Datas"
+                            isActive={tasksSelected.length === 0} 
+                            onClick={() => handleTaskSelected("all")}
+                        />
+                    </li>
+                    {filterDate && filterDate.map((task, index) => (
                         <li key={String(index)}>
                             <ButtonText 
                                 title={task.data_limite}
@@ -115,22 +120,20 @@ export function Home() {
                                 isActive={tasksSelected.includes(task.data_limite)}
                             />
                         </li>
-                    ))
-                }
-            </Menu>
+                    ))}
+                </Menu>
 
-            <Search>
-                <Input 
-                    placeholder="Pesquisar pelo nome da tarefa"
-                    onChange={(e) => setSearch(e.target.value)}
-                    icon={FiSearch}
-                />
-            </Search>
+                <Search>
+                    <Input 
+                        placeholder="Pesquisar pelo nome da tarefa"
+                        onChange={(e) => setSearch(e.target.value)}
+                        icon={FiSearch}
+                    />
+                </Search>
 
-            <Content>
-                <Section title="Minhas Tarefas">
-                    {
-                        tasks.map((task, index) => (
+                <Content>
+                    <Section title="Minhas Tarefas">
+                        {tasks.map((task, index) => (
                             <Task 
                                 key={String(task.identificador_da_tarefa)}
                                 data={task}
@@ -138,22 +141,21 @@ export function Home() {
                                 onMoveUp={() => moveTaskUp(index)}
                                 onMoveDown={() => moveTaskDown(index)}
                             />
-                        ))
-                    }
-                </Section>
-            </Content>
+                        ))}
+                    </Section>
+                </Content>
 
-            <AddTask onClick={() => openModal()} >
-                <FiPlus />
-            </AddTask>
+                <AddTask onClick={() => openModal()} >
+                    <FiPlus />
+                </AddTask>
 
-            {showModal && (
-                <FormTask 
-                    closeModal={closeModal} 
-                    task={taskToEdit}
-                />
-            )}
-
-        </Container>
+                {showModal && (
+                    <FormTask 
+                        closeModal={closeModal} 
+                        task={taskToEdit}
+                    />
+                )}
+            </Container>
+        )
     );
 }
