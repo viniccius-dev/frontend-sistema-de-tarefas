@@ -53,24 +53,28 @@ export function FormTask({ closeModal, task }) {
 
         const parsedCost = parseCostValue(cost);
 
-        if(task) {
-            await api.put(`/tasks/${task.identificador_da_tarefa}`, {
-                nome_da_tarefa: name,
-                custo: parsedCost,
-                data_limite: dueDate
-            });
-            alert("Tarefa atualizada com sucesso!");
-        } else {
-            await api.post("/tasks", {
-                nome_da_tarefa: name,
-                custo: parsedCost,
-                data_limite: dueDate
-            });
-    
-            alert("Tarefa criada com sucesso!");
+        try {
+            if (task) {
+                await api.put(`/tasks/${task.identificador_da_tarefa}`, {
+                    nome_da_tarefa: name,
+                    custo: parsedCost,
+                    data_limite: dueDate
+                });
+                alert("Tarefa atualizada com sucesso!");
+            } else {
+                await api.post("/tasks", {
+                    nome_da_tarefa: name,
+                    custo: parsedCost,
+                    data_limite: dueDate
+                });
+                alert("Tarefa criada com sucesso!");
+            }
+            
+            window.location.reload();
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "Ocorreu um erro ao processar sua solicitação.";
+            alert(errorMessage);
         }
-        
-        window.location.reload();
     }
 
     return (

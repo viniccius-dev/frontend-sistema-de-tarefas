@@ -16,16 +16,17 @@ import { api } from '../../services/api';
 
 export function Home() {
     const [search, setSearch] = useState("");
-    const [showModal, setShowModal] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [filterDate, setFilterDate] = useState([]);
     const [tasksSelected, setTasksSelected] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
 
     const openModal = (task = null) => {
         setTaskToEdit(task); // Define a tarefa selecionada para edição
         setShowModal(true);
     };
+
     const closeModal = () => {
         setTaskToEdit(null);
         setShowModal(false);
@@ -44,6 +45,37 @@ export function Home() {
         } else {
             setTasksSelected(prevState => [...prevState, date]);
         }
+    }
+
+    async function updateTaskOrder(idTask1, idTask2) {
+        try {
+            await api.put('/tasks/update-order', { idTask1, idTask2 });
+        } catch (error) {
+            console.error("Erro ao atualizar a ordem das tarefas:", error);
+        }
+    }
+
+    function moveTaskUp(index) {
+        if (index === 0) return;
+
+        const updatedTasks = Array.from(tasks);
+        const [taskAbove, currentTask] = [updatedTasks[index - 1], updatedTasks[index]];
+        
+        [updatedTasks[index - 1], updatedTasks[index]] = [currentTask, taskAbove];
+        setTasks(updatedTasks);
+        updateTaskOrder(currentTask.identificador_da_tarefa, taskAbove.identificador_da_tarefa);
+    }
+    
+    function moveTaskDown(index) {
+        if (index === tasks.length - 1) return;
+    
+        const updatedTasks = Array.from(tasks);
+        const [currentTask, taskBelow] = [updatedTasks[index], updatedTasks[index + 1]];
+    
+        [updatedTasks[index], updatedTasks[index + 1]] = [taskBelow, currentTask];
+        setTasks(updatedTasks);
+    
+        updateTaskOrder(currentTask.identificador_da_tarefa, taskBelow.identificador_da_tarefa);
     }
 
     useEffect(() => {
@@ -98,11 +130,13 @@ export function Home() {
             <Content>
                 <Section title="Minhas Tarefas">
                     {
-                        tasks.map(task => (
+                        tasks.map((task, index) => (
                             <Task 
                                 key={String(task.identificador_da_tarefa)}
                                 data={task}
                                 onEdit={() => openModal(task)}
+                                onMoveUp={() => moveTaskUp(index)}
+                                onMoveDown={() => moveTaskDown(index)}
                             />
                         ))
                     }

@@ -2,17 +2,30 @@ import styled from "styled-components";
 
 export const Container = styled.button`
     width: 100%;
-    background-color: ${({ theme }) => theme.COLORS.BACKGROUND_700};
-
+    background-color: ${({ theme, $highlight }) => 
+        $highlight === "true" ? theme.COLORS.BLUE : theme.COLORS.BACKGROUND_700};
     border: none;
     border-radius: 10px;
-
-    padding: 22px;
+    padding: 15px;
     margin-bottom: 16px;
-
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    transition: transform 0.2s ease-in-out;
+
+    .left-section {
+        display: flex;
+
+        .order-task-controls {
+            display: flex;
+            flex-direction: column;
+            padding-right: 10px;
+        }
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+    }
 
     h1 {
         flex: 1;

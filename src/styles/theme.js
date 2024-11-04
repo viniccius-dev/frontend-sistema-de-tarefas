@@ -8,6 +8,7 @@ export default {
   
       WHITE: "#F4EDE8",
       RED: "#CC2D33",
+      BLUE: "rgba(255,128,13,0.2)",
   
       GRAY_300: "#666360",
       GRAY_100: "#999591",
