@@ -2,15 +2,14 @@ import { Tag } from '../Tag';
 import { Container } from './styles';
 import { RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
 
-export function Note({ data, ...rest }) {
-
+export function Task({ data, onEdit, ...rest }) {
     function formatCurrency(value) {
         return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
             minimumFractionDigits: 2,
         }).format(value);
-    }    
+    }
 
     return (
         <Container {...rest}>
@@ -24,7 +23,7 @@ export function Note({ data, ...rest }) {
             </div>
 
             <div>
-                <RiEdit2Line title="Editar Tarefa" />
+                <RiEdit2Line title="Editar Tarefa" onClick={onEdit} />
                 <RiDeleteBinLine title="Excluir Tarefa" />
             </div>
         </Container>

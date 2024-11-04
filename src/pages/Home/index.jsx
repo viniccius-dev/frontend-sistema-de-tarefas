@@ -5,7 +5,7 @@ import { Header } from "../../components/Header";
 import { ButtonText } from "../../components/ButtonText";
 import { Input } from "../../components/Input";
 import { Section } from "../../components/Section";
-import { Note } from "../../components/Task";
+import { Task } from "../../components/Task";
 import { FormTask } from '../../components/FormTask';
 
 import systemTitle from '../../assets/titulo_sistema.png';
@@ -20,9 +20,16 @@ export function Home() {
     const [tasks, setTasks] = useState([]);
     const [filterDate, setFilterDate] = useState([]);
     const [tasksSelected, setTasksSelected] = useState([]);
+    const [taskToEdit, setTaskToEdit] = useState(null);
 
-    const openModal = () => setShowModal(true);
-    const closeModal = () => setShowModal(false);
+    const openModal = (task = null) => {
+        setTaskToEdit(task); // Define a tarefa selecionada para edição
+        setShowModal(true);
+    };
+    const closeModal = () => {
+        setTaskToEdit(null);
+        setShowModal(false);
+    };
 
     function handleTaskSelected(date) {
         if(date === "all") {
@@ -92,20 +99,26 @@ export function Home() {
                 <Section title="Minhas Tarefas">
                     {
                         tasks.map(task => (
-                            <Note 
+                            <Task 
                                 key={String(task.identificador_da_tarefa)}
                                 data={task}
+                                onEdit={() => openModal(task)}
                             />
                         ))
                     }
                 </Section>
             </Content>
 
-            <AddTask onClick={openModal} >
+            <AddTask onClick={() => openModal()} >
                 <FiPlus />
             </AddTask>
 
-            {showModal && <FormTask closeModal={closeModal} />}
+            {showModal && (
+                <FormTask 
+                    closeModal={closeModal} 
+                    task={taskToEdit}
+                />
+            )}
 
         </Container>
     );
