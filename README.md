@@ -8,6 +8,7 @@ Front-end do **sistema de tarefas**, que faz parte de uma solução para **geren
 
 ## Índice
 
+- [Demonstração](#demonstração)
 - [Funcionalidades](#funcionalidades)
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação e Execução](#instalação-e-execução)
